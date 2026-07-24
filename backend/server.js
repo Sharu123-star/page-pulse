@@ -29,16 +29,16 @@ app.post("/audit", async (req, res) => {
         const start = Date.now();
 
         const response = await axios.get(url, {
-    timeout: 5000,
-    maxRedirects: 5,
-    headers: {
-        "User-Agent":
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
-        "Accept":
-            "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-        "Accept-Language": "en-US,en;q=0.9"
-    }
-});
+            timeout: 5000,
+            maxRedirects: 5,
+            headers: {
+                "User-Agent":
+                    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+                "Accept":
+                    "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+                "Accept-Language": "en-US,en;q=0.9"
+            }
+        });
 
         // Check if the response is HTML
         const contentType = response.headers["content-type"] || "";
@@ -112,8 +112,14 @@ app.post("/audit", async (req, res) => {
 
 });
 
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
-});
+// Start server only when running directly
+if (require.main === module) {
+    app.listen(PORT, () => {
+        console.log(`Server running on http://localhost:${PORT}`);
+    });
+}
+
+// Export app for Jest testing
+module.exports = app;
